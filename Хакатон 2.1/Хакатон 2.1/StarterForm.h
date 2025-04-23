@@ -301,7 +301,7 @@ namespace StarterForm {
 		}
 		else 
 		{
-			String^ folderPath = System::IO::Path::GetDirectoryName(Select->Text) + "Результат";
+			String^ folderPath = System::IO::Path::GetDirectoryName(Select->Text) + "\\Результат";
 			SelectSave->Text = folderPath;
 		}
 	}

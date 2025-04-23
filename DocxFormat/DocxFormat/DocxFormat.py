@@ -5,7 +5,7 @@ from docx.shared import Pt # доступ к размеру шрифта
 from docx.shared import Mm # доступ к миллиметрам
 from docx.enum.text import WD_LINE_SPACING # доступ к межстрочному интервалу
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT # доступ к выравниванию текста
-from docx2pdf import convert
+from docx2pdf import convert # доступ к конвертации в pdf
 
 def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=None):
     doc = Document(input_path) # создаём переменную на основе docx документа и его расположения
@@ -67,7 +67,8 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=None):
         add_center(extra_fields[2], 16)
         add_center(" ", 14)
         add_center(" ", 14)
-        add_center(extra_fields[3] + "по учебной дисциплине «" + extra_fields[4] + "» по специальности " + extra_fields[5] + " " + extra_fields[6], 14)
+        add_center(extra_fields[3] + "по учебной дисциплине «" + extra_fields[4] + 
+                   "» по специальности " + extra_fields[5] + " " + extra_fields[6], 14)
 
         title.add_paragraph()
         title.add_paragraph()
