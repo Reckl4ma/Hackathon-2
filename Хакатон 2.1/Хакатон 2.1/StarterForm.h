@@ -21,7 +21,9 @@ namespace StarterForm {
 
 	private:
 		TitlePageData* data;
-		TitlePage^ titlePage;
+	private: System::Windows::Forms::Button^ SavePdf;
+
+		   TitlePage^ titlePage;
 
 	public:
 		StarterForm(void)
@@ -87,6 +89,7 @@ namespace StarterForm {
 			this->error = (gcnew System::Windows::Forms::Label());
 			this->TitlePageLabel = (gcnew System::Windows::Forms::Button());
 			this->Switch = (gcnew System::Windows::Forms::Button());
+			this->SavePdf = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// label1
@@ -189,11 +192,22 @@ namespace StarterForm {
 			this->Switch->UseVisualStyleBackColor = true;
 			this->Switch->Click += gcnew System::EventHandler(this, &StarterForm::Switch_Click);
 			// 
+			// SavePdf
+			// 
+			this->SavePdf->Location = System::Drawing::Point(92, 295);
+			this->SavePdf->Name = L"SavePdf";
+			this->SavePdf->Size = System::Drawing::Size(124, 49);
+			this->SavePdf->TabIndex = 9;
+			this->SavePdf->Text = L"Конвентировать docx в pdf";
+			this->SavePdf->UseVisualStyleBackColor = true;
+			this->SavePdf->Click += gcnew System::EventHandler(this, &StarterForm::SavePdf_Click);
+			// 
 			// StarterForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(305, 432);
+			this->Controls->Add(this->SavePdf);
 			this->Controls->Add(this->Switch);
 			this->Controls->Add(this->TitlePageLabel);
 			this->Controls->Add(this->error);
@@ -224,7 +238,7 @@ namespace StarterForm {
 
 	private: System::Void ConfirmDocx_Click(System::Object^ sender, System::EventArgs^ e) {
 		String^ inputPath = Select->Text;
-		String^ outputPath = SelectSave->Text;
+		String^ outputPath = SelectSave->Text + ".docx";
 
 		if (outputPath == "Указать путь")
 		{
@@ -240,8 +254,9 @@ namespace StarterForm {
 		{
 			if (TitlePageLabel->Enabled == true)
 			{
-				String^ command = "python \"C:\\Users\\Recklama\\source\\repos\\DocxFormat\\DocxFormat\\DocxFormat.py\" \""
-					+ inputPath + "\" \"" + outputPath + "\""
+				bool usePdf = false;
+				String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \""
+					+ inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\""
 					+ " \"" + msclr::interop::marshal_as<String^>(data->Inst) + "\""
 					+ " \"" + msclr::interop::marshal_as<String^>(data->Depart) + "\""
 					+ " \"" + msclr::interop::marshal_as<String^>(data->Proj) + "\""
@@ -260,7 +275,8 @@ namespace StarterForm {
 			}
 			else
 			{
-				String^ command = "python \"C:\\Users\\Recklama\\source\\repos\\DocxFormat\\DocxFormat\\DocxFormat.py\" \"" + inputPath + "\" \"" + outputPath + "\"";
+				bool usePdf = false;
+				String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \"" + inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\"";
 				std::string arguments = msclr::interop::marshal_as<std::string>(command);
 				system(arguments.c_str());
 			}
@@ -274,7 +290,7 @@ namespace StarterForm {
 
 		if (folderSelect->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		{
-			SelectSave->Text = folderSelect->SelectedPath + "\\Результат.docx";
+			SelectSave->Text = folderSelect->SelectedPath + "\\Результат";
 		}
 	}
 
@@ -285,7 +301,7 @@ namespace StarterForm {
 		}
 		else 
 		{
-			String^ folderPath = System::IO::Path::GetDirectoryName(Select->Text) + "Результат.docx";
+			String^ folderPath = System::IO::Path::GetDirectoryName(Select->Text) + "Результат";
 			SelectSave->Text = folderPath;
 		}
 	}
@@ -302,6 +318,28 @@ namespace StarterForm {
 		{
 			Switch->Text = "Добавить титульный лист";
 			TitlePageLabel->Enabled = false;
+		}
+	}
+	private: System::Void SavePdf_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ inputPath = Select->Text;
+		String^ outputPath = SelectSave->Text + ".docx";
+
+		if (outputPath == "Указать путь")
+		{
+			error->Text = "Выберите путь для сохранения";
+		}
+
+		if (inputPath == "Указать путь")
+		{
+			error->Text = "Выберите путь до файла";
+		}
+
+		if (inputPath != "Указать путь" && outputPath != "Указать путь")
+		{
+			bool usePdf = true;
+			String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \"" + inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\"";
+			std::string arguments = msclr::interop::marshal_as<std::string>(command);
+			system(arguments.c_str());
 		}
 	}
 };
