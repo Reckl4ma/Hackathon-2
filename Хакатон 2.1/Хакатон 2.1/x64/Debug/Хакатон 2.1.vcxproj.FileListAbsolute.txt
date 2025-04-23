@@ -1,0 +1,4 @@
+C:\Users\Recklama\source\repos\Хакатон 2.1\Хакатон 2.1\x64\Debug\Хакатон 2.1.vcxproj.AssemblyReference.cache
+C:\Users\Recklama\source\repos\Хакатон 2.1\Хакатон 2.1\x64\Debug\Хакатон21.StarterForm.resources
+C:\Users\Recklama\source\repos\Хакатон 2.1\Хакатон 2.1\x64\Debug\Хакатон 2.1.vcxproj.GenerateResource.cache
+C:\Users\Recklama\source\repos\Хакатон 2.1\Хакатон 2.1\x64\Debug\Хакатон21.TitlePage.resources
