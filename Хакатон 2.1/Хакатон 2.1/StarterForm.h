@@ -198,7 +198,7 @@ namespace StarterForm {
 			this->SavePdf->Name = L"SavePdf";
 			this->SavePdf->Size = System::Drawing::Size(124, 49);
 			this->SavePdf->TabIndex = 9;
-			this->SavePdf->Text = L"Конвентировать docx в pdf";
+			this->SavePdf->Text = L"Конвертировать docx в pdf";
 			this->SavePdf->UseVisualStyleBackColor = true;
 			this->SavePdf->Click += gcnew System::EventHandler(this, &StarterForm::SavePdf_Click);
 			// 
