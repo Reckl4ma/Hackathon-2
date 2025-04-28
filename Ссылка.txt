@@ -1,0 +1,85 @@
+https://github.com/Reckl4ma/Hackathon-2
+
+if (inputPath != "Указать путь" && outputPath != "Указать путь")
+{
+	bool useApplication = applicationBut->Enabled;
+	if (TitlePageLabel->Enabled == true)
+	{
+		String^ appData = "";
+		if (useApplication)
+		{
+			// Сколько приложений
+			int appsCount = sharedData::ListStorage::appTypes->Count;
+			appData += appsCount.ToString() + " ";
+
+			for (int i = 0; i < appsCount; ++i)
+			{
+				// Название типа приложения
+				appData += "\"" + sharedData::ListStorage::appTypes[i] + "\" ";
+
+				// Количество картинок в приложении
+				int imgCount = sharedData::ListStorage::imagePaths[i]->Count;
+				appData += imgCount.ToString() + " ";
+
+				// Сами пути к картинкам
+				auto images = sharedData::ListStorage::imagePaths[i];
+				for (int j = 0; j < imgCount; ++j)
+				{
+					appData += "\"" + images[j] + "\" ";
+				}
+			}
+		}
+		bool usePdf = false;
+		String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \""
+			+ inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Inst) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Depart) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Proj) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Doc) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Discip) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Numb) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Spec) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->FIOStud) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->Group) + "\""
+			+ " \"" + msclr::interop::marshal_as<String^>(data->FIOVis) + "\""
+			+ " \"--APPDATA--\" "
+			+ appData;;
+
+		std::string arguments = msclr::interop::marshal_as<std::string>(command);
+
+		system(arguments.c_str());
+
+	}
+	else
+	{
+		String^ appData = "";
+		if (useApplication)
+		{
+			// Сколько приложений
+			int appsCount = sharedData::ListStorage::appTypes->Count;
+			appData += appsCount.ToString() + " ";
+
+			for (int i = 0; i < appsCount; ++i)
+			{
+				// Название типа приложения
+				appData += "\"" + sharedData::ListStorage::appTypes[i] + "\" ";
+
+				// Количество картинок в приложении
+				int imgCount = sharedData::ListStorage::imagePaths[i]->Count;
+				appData += imgCount.ToString() + " ";
+
+				// Сами пути к картинкам
+				auto images = sharedData::ListStorage::imagePaths[i];
+				for (int j = 0; j < imgCount; ++j)
+				{
+					appData += "\"" + images[j] + "\" ";
+				}
+			}
+		}
+		bool usePdf = false;
+		String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \"" + inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\"" + " \"" 
+			+ " \"--APPDATA--\" " + appData;;
+		std::string arguments = msclr::interop::marshal_as<std::string>(command);
+		system(arguments.c_str());
+	}
+}
