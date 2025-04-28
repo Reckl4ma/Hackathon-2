@@ -3,6 +3,8 @@
 #include <msclr/marshal_cppstd.h>
 #include "TitlePageData.h"
 #include "TitlePage.h"
+#include "ÀpplicationForm.h"
+#include "List.h"
 
 namespace StarterForm {
 
@@ -22,8 +24,13 @@ namespace StarterForm {
 	private:
 		TitlePageData* data;
 	private: System::Windows::Forms::Button^ SavePdf;
+	private: System::Windows::Forms::Button^ Switch1;
+
+	private: System::Windows::Forms::Button^ applicationBut;
+
 
 		   TitlePage^ titlePage;
+		   ÀpplicationForm^ applicationForm;
 
 	public:
 		StarterForm(void)
@@ -31,6 +38,7 @@ namespace StarterForm {
 			InitializeComponent();
 			data = new TitlePageData();
 			titlePage = gcnew TitlePage(data);
+			applicationForm = gcnew ÀpplicationForm();
 		}
 
 	protected:
@@ -90,6 +98,8 @@ namespace StarterForm {
 			this->TitlePageLabel = (gcnew System::Windows::Forms::Button());
 			this->Switch = (gcnew System::Windows::Forms::Button());
 			this->SavePdf = (gcnew System::Windows::Forms::Button());
+			this->Switch1 = (gcnew System::Windows::Forms::Button());
+			this->applicationBut = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// label1
@@ -202,11 +212,34 @@ namespace StarterForm {
 			this->SavePdf->UseVisualStyleBackColor = true;
 			this->SavePdf->Click += gcnew System::EventHandler(this, &StarterForm::SavePdf_Click);
 			// 
+			// Switch1
+			// 
+			this->Switch1->Location = System::Drawing::Point(349, 216);
+			this->Switch1->Name = L"Switch1";
+			this->Switch1->Size = System::Drawing::Size(81, 57);
+			this->Switch1->TabIndex = 10;
+			this->Switch1->Text = L"Äîáàâèòü ïðèëîæåíèå";
+			this->Switch1->UseVisualStyleBackColor = true;
+			this->Switch1->Click += gcnew System::EventHandler(this, &StarterForm::Switch1_Click);
+			// 
+			// applicationBut
+			// 
+			this->applicationBut->Enabled = false;
+			this->applicationBut->Location = System::Drawing::Point(322, 316);
+			this->applicationBut->Name = L"applicationBut";
+			this->applicationBut->Size = System::Drawing::Size(134, 57);
+			this->applicationBut->TabIndex = 11;
+			this->applicationBut->Text = L"Íàñòðîèòü ïðèëîæåíèå";
+			this->applicationBut->UseVisualStyleBackColor = true;
+			this->applicationBut->Click += gcnew System::EventHandler(this, &StarterForm::applicationBut_Click);
+			// 
 			// StarterForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(305, 432);
+			this->ClientSize = System::Drawing::Size(486, 432);
+			this->Controls->Add(this->applicationBut);
+			this->Controls->Add(this->Switch1);
 			this->Controls->Add(this->SavePdf);
 			this->Controls->Add(this->Switch);
 			this->Controls->Add(this->TitlePageLabel);
@@ -252,34 +285,60 @@ namespace StarterForm {
 
 		if (inputPath != "Óêàçàòü ïóòü" && outputPath != "Óêàçàòü ïóòü")
 		{
-			if (TitlePageLabel->Enabled == true)
-			{
-				bool usePdf = false;
-				String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \""
-					+ inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Inst) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Depart) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Proj) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Doc) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Discip) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Numb) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Spec) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->FIOStud) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->Group) + "\""
-					+ " \"" + msclr::interop::marshal_as<String^>(data->FIOVis) + "\"";
+			bool usePdf = false;
+			std::vector<std::string> cmdArgs;
+			cmdArgs.push_back("python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" ");
+			cmdArgs.push_back(msclr::interop::marshal_as<std::string>(inputPath));
+			cmdArgs.push_back(msclr::interop::marshal_as<std::string>(outputPath));
+			if (usePdf) cmdArgs.push_back("--pdf");
 
-				std::string arguments = msclr::interop::marshal_as<std::string>(command);
-
-				system(arguments.c_str());
-
+			if (TitlePageLabel->Enabled) {
+				cmdArgs.push_back("--title");
+				cmdArgs.push_back(data->Inst);
+				cmdArgs.push_back(data->Depart);
+				cmdArgs.push_back(data->Proj);
+				cmdArgs.push_back(data->Doc);
+				cmdArgs.push_back(data->Discip);
+				cmdArgs.push_back("\"" + data->Numb + "\"");
+				cmdArgs.push_back(data->Spec);
+				cmdArgs.push_back(data->FIOStud);
+				cmdArgs.push_back("\"" + data->Group + "\"");
+				cmdArgs.push_back(data->FIOVis);
 			}
-			else
-			{
-				bool usePdf = false;
-				String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \"" + inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\"";
-				std::string arguments = msclr::interop::marshal_as<std::string>(command);
-				system(arguments.c_str());
+
+			if (applicationBut->Enabled) {
+				int appsCount = sharedData::ListStorage::appTypes->Count;
+				cmdArgs.push_back("--appdata");
+				cmdArgs.push_back(std::to_string(appsCount));
+				for (int i = 0; i < appsCount; ++i) {
+
+					cmdArgs.push_back(msclr::interop::marshal_as<std::string>(sharedData::ListStorage::appTypes[i]));
+
+					int imgCount = sharedData::ListStorage::imagePaths[i]->Count;
+					cmdArgs.push_back(std::to_string(imgCount));
+
+					auto images = sharedData::ListStorage::imagePaths[i];
+					for (int j = 0; j < imgCount; ++j)
+					{
+						cmdArgs.push_back(msclr::interop::marshal_as<std::string>(images[j]));
+					}
+				}
 			}
+
+			std::ostringstream oss;
+			for (auto& a : cmdArgs) {
+				if (a.find(' ') != std::string::npos) {
+					oss << '"' << a << "\" ";
+				}
+				else {
+					oss << a << " ";
+				}
+			}
+
+			auto cmdLine = oss.str();
+			MessageBox::Show(gcnew String(cmdLine.c_str()), "Êîìàíäà äëÿ Python");
+
+			system(cmdLine.c_str());
 		}
 	}
 
@@ -341,6 +400,21 @@ namespace StarterForm {
 			std::string arguments = msclr::interop::marshal_as<std::string>(command);
 			system(arguments.c_str());
 		}
+	}
+	private: System::Void Switch1_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (applicationBut->Enabled == false)
+		{
+			Switch1->Text = "Óáðàòü ïðèëîæåíèå";
+			applicationBut->Enabled = true;
+		}
+		else
+		{
+			Switch1->Text = "Äîáàâèòü ïðèëîæåíèå";
+			applicationBut->Enabled = false;
+		}
+	}
+	private: System::Void applicationBut_Click(System::Object^ sender, System::EventArgs^ e) {
+		applicationForm->ShowDialog();
 	}
 };
 }

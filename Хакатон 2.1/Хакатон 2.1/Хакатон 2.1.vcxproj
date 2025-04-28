@@ -123,8 +123,10 @@
   <ItemGroup>
     <ClCompile Include="StarterForm.cpp" />
     <ClCompile Include="TitlePage.cpp" />
+    <ClCompile Include="АpplicationForm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="List.h" />
     <ClInclude Include="StarterForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -132,6 +134,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="TitlePageData.h" />
+    <ClInclude Include="АpplicationForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="StarterForm.resx">
@@ -139,6 +144,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TitlePage.resx">
       <DependentUpon>TitlePage.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="АpplicationForm.resx">
+      <DependentUpon>АpplicationForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
