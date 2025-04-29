@@ -1,4 +1,6 @@
 ﻿  StarterForm.cpp
+  TitlePage.cpp
+  Создание кода...
   StarterForm.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
   Хакатон 2.1.vcxproj -> C:\Users\Recklama\source\repos\Хакатон 2.1\x64\Debug\Хакатон 2.1.exe
   "pwsh.exe" не является внутренней или внешней

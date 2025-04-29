@@ -98,6 +98,22 @@ namespace StarterForm {
 	private: System::Windows::Forms::Button^ SaveBut;
 	private: System::Windows::Forms::Button^ ConfirmBut;
 	private: System::Windows::Forms::Label^ InfLabel;
+	private: System::Windows::Forms::TextBox^ DocTypeBox;
+
+	private: System::Windows::Forms::Label^ DocTypeLab;
+	private: System::Windows::Forms::TextBox^ UDCBox;
+
+
+	private: System::Windows::Forms::Label^ UDCLab;
+
+	private: System::Windows::Forms::TextBox^ InstRedBox;
+
+	private: System::Windows::Forms::Label^ InstRedLab;
+	private: System::Windows::Forms::TextBox^ SubDocBox;
+
+
+	private: System::Windows::Forms::Label^ SubDocLab;
+
 
 
 
@@ -138,6 +154,14 @@ namespace StarterForm {
 			this->SaveBut = (gcnew System::Windows::Forms::Button());
 			this->ConfirmBut = (gcnew System::Windows::Forms::Button());
 			this->InfLabel = (gcnew System::Windows::Forms::Label());
+			this->DocTypeBox = (gcnew System::Windows::Forms::TextBox());
+			this->DocTypeLab = (gcnew System::Windows::Forms::Label());
+			this->UDCBox = (gcnew System::Windows::Forms::TextBox());
+			this->UDCLab = (gcnew System::Windows::Forms::Label());
+			this->InstRedBox = (gcnew System::Windows::Forms::TextBox());
+			this->InstRedLab = (gcnew System::Windows::Forms::Label());
+			this->SubDocBox = (gcnew System::Windows::Forms::TextBox());
+			this->SubDocLab = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// InstLab
@@ -305,7 +329,7 @@ namespace StarterForm {
 			this->FIOVisLab->AutoSize = true;
 			this->FIOVisLab->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->FIOVisLab->Location = System::Drawing::Point(15, 397);
+			this->FIOVisLab->Location = System::Drawing::Point(12, 397);
 			this->FIOVisLab->Name = L"FIOVisLab";
 			this->FIOVisLab->Size = System::Drawing::Size(154, 16);
 			this->FIOVisLab->TabIndex = 17;
@@ -332,7 +356,7 @@ namespace StarterForm {
 			// 
 			// LoadBut
 			// 
-			this->LoadBut->Location = System::Drawing::Point(12, 441);
+			this->LoadBut->Location = System::Drawing::Point(12, 544);
 			this->LoadBut->Name = L"LoadBut";
 			this->LoadBut->Size = System::Drawing::Size(176, 38);
 			this->LoadBut->TabIndex = 21;
@@ -342,7 +366,7 @@ namespace StarterForm {
 			// 
 			// SaveBut
 			// 
-			this->SaveBut->Location = System::Drawing::Point(193, 441);
+			this->SaveBut->Location = System::Drawing::Point(193, 544);
 			this->SaveBut->Name = L"SaveBut";
 			this->SaveBut->Size = System::Drawing::Size(176, 38);
 			this->SaveBut->TabIndex = 22;
@@ -352,7 +376,7 @@ namespace StarterForm {
 			// 
 			// ConfirmBut
 			// 
-			this->ConfirmBut->Location = System::Drawing::Point(103, 517);
+			this->ConfirmBut->Location = System::Drawing::Point(103, 620);
 			this->ConfirmBut->Name = L"ConfirmBut";
 			this->ConfirmBut->Size = System::Drawing::Size(176, 38);
 			this->ConfirmBut->TabIndex = 23;
@@ -365,17 +389,101 @@ namespace StarterForm {
 			this->InfLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->InfLabel->ForeColor = System::Drawing::Color::DarkRed;
-			this->InfLabel->Location = System::Drawing::Point(15, 491);
+			this->InfLabel->Location = System::Drawing::Point(15, 594);
 			this->InfLabel->Name = L"InfLabel";
 			this->InfLabel->Size = System::Drawing::Size(354, 23);
 			this->InfLabel->TabIndex = 24;
 			this->InfLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
+			// DocTypeBox
+			// 
+			this->DocTypeBox->Location = System::Drawing::Point(175, 451);
+			this->DocTypeBox->Multiline = true;
+			this->DocTypeBox->Name = L"DocTypeBox";
+			this->DocTypeBox->Size = System::Drawing::Size(197, 23);
+			this->DocTypeBox->TabIndex = 30;
+			// 
+			// DocTypeLab
+			// 
+			this->DocTypeLab->AutoSize = true;
+			this->DocTypeLab->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->DocTypeLab->Location = System::Drawing::Point(14, 455);
+			this->DocTypeLab->Name = L"DocTypeLab";
+			this->DocTypeLab->Size = System::Drawing::Size(161, 16);
+			this->DocTypeLab->TabIndex = 29;
+			this->DocTypeLab->Text = L"Тип документа сокр.";
+			// 
+			// UDCBox
+			// 
+			this->UDCBox->Location = System::Drawing::Point(57, 482);
+			this->UDCBox->Multiline = true;
+			this->UDCBox->Name = L"UDCBox";
+			this->UDCBox->Size = System::Drawing::Size(315, 23);
+			this->UDCBox->TabIndex = 28;
+			// 
+			// UDCLab
+			// 
+			this->UDCLab->AutoSize = true;
+			this->UDCLab->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->UDCLab->Location = System::Drawing::Point(15, 486);
+			this->UDCLab->Name = L"UDCLab";
+			this->UDCLab->Size = System::Drawing::Size(36, 16);
+			this->UDCLab->TabIndex = 27;
+			this->UDCLab->Text = L"УДК";
+			// 
+			// InstRedBox
+			// 
+			this->InstRedBox->Location = System::Drawing::Point(136, 422);
+			this->InstRedBox->Multiline = true;
+			this->InstRedBox->Name = L"InstRedBox";
+			this->InstRedBox->Size = System::Drawing::Size(236, 23);
+			this->InstRedBox->TabIndex = 26;
+			// 
+			// InstRedLab
+			// 
+			this->InstRedLab->AutoSize = true;
+			this->InstRedLab->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->InstRedLab->Location = System::Drawing::Point(12, 426);
+			this->InstRedLab->Name = L"InstRedLab";
+			this->InstRedLab->Size = System::Drawing::Size(119, 16);
+			this->InstRedLab->TabIndex = 25;
+			this->InstRedLab->Text = L"Институт сокр.";
+			// 
+			// SubDocBox
+			// 
+			this->SubDocBox->Location = System::Drawing::Point(209, 511);
+			this->SubDocBox->Multiline = true;
+			this->SubDocBox->Name = L"SubDocBox";
+			this->SubDocBox->Size = System::Drawing::Size(163, 23);
+			this->SubDocBox->TabIndex = 32;
+			// 
+			// SubDocLab
+			// 
+			this->SubDocLab->AutoSize = true;
+			this->SubDocLab->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->SubDocLab->Location = System::Drawing::Point(15, 515);
+			this->SubDocLab->Name = L"SubDocLab";
+			this->SubDocLab->Size = System::Drawing::Size(192, 16);
+			this->SubDocLab->TabIndex = 31;
+			this->SubDocLab->Text = L"Тип под документа сокр.";
+			// 
 			// TitlePage
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(384, 560);
+			this->ClientSize = System::Drawing::Size(384, 665);
+			this->Controls->Add(this->SubDocBox);
+			this->Controls->Add(this->SubDocLab);
+			this->Controls->Add(this->DocTypeBox);
+			this->Controls->Add(this->DocTypeLab);
+			this->Controls->Add(this->UDCBox);
+			this->Controls->Add(this->UDCLab);
+			this->Controls->Add(this->InstRedBox);
+			this->Controls->Add(this->InstRedLab);
 			this->Controls->Add(this->InfLabel);
 			this->Controls->Add(this->ConfirmBut);
 			this->Controls->Add(this->SaveBut);
@@ -436,6 +544,11 @@ namespace StarterForm {
 				j["group"] = converter.to_bytes(ctx.marshal_as<std::wstring>(GroupBox->Text));
 				j["teacher"] = converter.to_bytes(ctx.marshal_as<std::wstring>(FIOVisBox->Text));
 
+				j["inst_red"] = converter.to_bytes(ctx.marshal_as<std::wstring>(InstRedBox->Text));
+				j["DocType"] = converter.to_bytes(ctx.marshal_as<std::wstring>(DocTypeBox->Text));
+				j["UDC"] = converter.to_bytes(ctx.marshal_as<std::wstring>(UDCBox->Text));
+				j["SubDoc"] = converter.to_bytes(ctx.marshal_as<std::wstring>(SubDocBox->Text));
+
 				file << converter.from_bytes(j.dump(4));
 				file.close();
 
@@ -485,6 +598,11 @@ namespace StarterForm {
 			GroupBox->Text = gcnew System::String(conv.from_bytes(j["group"].get<std::string>()).c_str());
 			FIOVisBox->Text = gcnew System::String(conv.from_bytes(j["teacher"].get<std::string>()).c_str());
 
+			InstRedBox->Text = gcnew System::String(conv.from_bytes(j["inst_red"].get<std::string>()).c_str());
+			DocTypeBox->Text = gcnew System::String(conv.from_bytes(j["DocType"].get<std::string>()).c_str());
+			UDCBox->Text = gcnew System::String(conv.from_bytes(j["UDC"].get<std::string>()).c_str());
+			SubDocBox->Text = gcnew System::String(conv.from_bytes(j["SubDoc"].get<std::string>()).c_str());
+
 			InfLabel->ForeColor = System::Drawing::Color::Green;
 			InfLabel->Text = "Шаблон успешно загружен";
 		}
@@ -505,6 +623,11 @@ namespace StarterForm {
 		data->FIOStud = msclr::interop::marshal_as<std::string>(FIOStudBox->Text);
 		data->Group = msclr::interop::marshal_as<std::string>(GroupBox->Text);
 		data->FIOVis = msclr::interop::marshal_as<std::string>(FIOVisBox->Text);
+
+		data->InstRed = msclr::interop::marshal_as<std::string>(InstRedBox->Text);
+		data->DocType = msclr::interop::marshal_as<std::string>(DocTypeBox->Text);
+		data->UDC = msclr::interop::marshal_as<std::string>(UDCBox->Text);
+		data->SubDoc = msclr::interop::marshal_as<std::string>(SubDocBox->Text);
 
 		this->Hide();
 	}

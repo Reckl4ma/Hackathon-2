@@ -6,14 +6,13 @@ from docx.shared import Mm # доступ к миллиметрам
 from docx.enum.text import WD_LINE_SPACING # доступ к межстрочному интервалу
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT # доступ к выравниванию текста
 from docx2pdf import convert # доступ к конвертации в pdf
-import win32com.client # доступ к макросам в word
-import argparse
-import ctypes
+import win32com.client # сильная библиотека по word
+import argparse # для удобной работы с данными из с++
 
-def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_data=None):
+def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, use_check=False, app_data=None):
     doc = Document(input_path) # создаём переменную на основе docx документа и его расположения
 
-    if not use_pdf:
+    if not use_pdf and not use_check:
         sections = doc.sections # .sections хранит информацию о полях
         for section in sections:
             section.top_margin = Mm(20)
@@ -33,6 +32,14 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_da
                 run.font.name = 'Times New Roman' 
                 run.font.size = Pt(14)
             # font хранит в себе настройки шрифта и через разные методы мы их изменяем
+
+        for table in doc.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    for para in cell.paragraphs:
+                        for run in para.runs:
+                            run.font.name = 'Times New Roman'
+                            run.font.size = Pt(14)
 
     titleParagraphsCount = 0 # Счётчик для количества строк в титульном листе
 
@@ -75,6 +82,7 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_da
         add_center(" ", 14)
         add_center(extra_fields[3] + " по учебной дисциплине «" + extra_fields[4] + 
                    "» по специальности " + extra_fields[5] + " " + extra_fields[6], 14)
+        add_center(extra_fields[10] + "." + extra_fields[11] + " " + extra_fields[8] + " " + extra_fields[12] + extra_fields[13], 14)
 
         title.add_paragraph()
         title.add_paragraph()
@@ -98,7 +106,6 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_da
         title.add_paragraph()
         title.add_paragraph()
         title.add_paragraph()
-        title.add_paragraph()
 
         titleParagraphsCount = len(title.paragraphs)
 
@@ -108,7 +115,7 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_da
         for element in title.element.body[:]:
             doc.element.body.append(element)
 
-    if not use_pdf:
+    if not use_pdf and not use_check:
         doc.save(output_path)  # Сохраняем от python-docx
 
         word = win32com.client.Dispatch("Word.Application") # открываем word
@@ -152,6 +159,67 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_da
                 if level == 1 and counters[0] != 1:
                     rng.InsertBefore("\f") #Если это пункт с уровнем 1 то он должен начинаться с нового листа
 
+        if app_data and not use_pdf and not use_check:
+            end_rng = docx.Content
+            end_rng.Collapse(0)  # Курсор в конец документа
+
+            russian_letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е']
+
+            for idx, (app_type, images) in enumerate(app_data):
+                letter = russian_letters[idx]
+
+                end_rng.InsertBreak(2)  # Новый лист
+
+                para = end_rng.Paragraphs.Add()
+                para.Range.Text = f"Приложение {letter}"
+                para.Range.Style = "Заголовок 1"
+                para.Range.ParagraphFormat.Alignment = 1
+                para.Range.ParagraphFormat.SpaceAfter = 0
+                para.Range.ParagraphFormat.FirstLineIndent = 0
+
+                para.Range.InsertParagraphAfter()
+
+                end_rng.SetRange(para.Range.End + 1, para.Range.End + 1)
+
+                para2 = end_rng.Paragraphs.Add()
+                para2.Range.Text = "(обязательно)"
+                para2.Range.Font.Name = "Times New Roman"
+                para2.Range.Font.Size = 14
+                para2.Range.ParagraphFormat.Alignment = 1
+
+                para2.Range.InsertParagraphAfter()
+                end_rng.SetRange(para2.Range.End + 1, para2.Range.End + 1)
+
+                for img_idx, img_path in enumerate(images):
+                    # Вставляем абзац для картинки
+                    p_img = docx.Paragraphs.Add(end_rng)
+                    img_range = p_img.Range
+                    img_shape = img_range.InlineShapes.AddPicture(FileName=img_path, LinkToFile=False, SaveWithDocument=True)
+                    img_shape.Width = 360  # ширина изображения
+                    img_shape.Height = 600 # высота изображения
+                    img_shape.LockAspectRatio = True
+                    p_img.Alignment = 1  # По центру
+
+                    end_rng.SetRange(p_img.Range.End, p_img.Range.End)
+
+                    # Вставляем подпись сразу после картинки
+                    caption_text = f"{app_type} {letter}.{img_idx + 1}"
+                    end_rng.InsertAfter(caption_text)
+
+                    # Настраиваем стиль подписи
+                    caption_range = end_rng.Duplicate
+                    caption_range.SetRange(end_rng.Start, end_rng.Start + len(caption_text))
+                    caption_range.Font.Name = "Times New Roman"
+                    caption_range.Font.Size = 14
+                    caption_range.ParagraphFormat.Alignment = 1  # По центру
+
+                    # После подписи вставляем перенос строки
+                    end_rng.SetRange(caption_range.End, caption_range.End)
+                    end_rng.InsertParagraphAfter()
+
+                    # И подвигаем курсор для следующего элемента
+                    end_rng.SetRange(end_rng.End, end_rng.End)
+
         if extra_fields:
             lastTitlePara = docx.Paragraphs(titleParagraphsCount - 1)
 
@@ -164,7 +232,6 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_da
             content.Range.Font.Name = "Times New Roman"
             content.Range.Font.Size = 14
             content.Range.ParagraphFormat.Alignment = 1  # По центру
-            content.Range.ParagraphFormat.SpaceAfter = 30  # Отступ после 30 pt
 
             contentRng = content.Range
             contentRng.Collapse(0)  # Ставим курсор после "Содержание"
@@ -216,29 +283,87 @@ def DocxFormat(input_path, output_path, extra_fields=None, use_pdf=False, app_da
         docx.Close() # закрыть файл
         word.Quit() # закрыть word
 
-    if use_pdf:
+    if use_pdf and not use_check:
         pdf_path = output_path.rsplit('.', 1)[0] + '.pdf' # берём путь с названием файла и добавляем в конец .pdf
         convert(input_path, pdf_path)
 
+    if not use_pdf and use_check:
+        doc.save(output_path)
+
+        word = win32com.client.Dispatch("Word.Application")
+        word.Visible = False
+
+        doc = word.Documents.Open(output_path)
+
+        for para in doc.Paragraphs:
+            for word in para.Range.Words:
+                word_text = word.Text.strip()
+                if word_text:  # Пропускаем пробелы
+                    try:
+                        font_name = word.Font.Name
+                        font_size = word.Font.Size
+                        align = word.ParagraphFormat.Alignment
+                        indent = word.ParagraphFormat.FirstLineIndent
+                        spacing_rule = word.ParagraphFormat.LineSpacingRule
+                    except:
+                        continue
+
+                    if align != 3:  # Не выровнен по ширине
+                        word.Font.Color = 0x006400
+                    if round(indent / 28.35, 2) != 1.25: # Неправильный абзацный отступ
+                        word.Font.Color = 0x654321
+                    if spacing_rule != WD_LINE_SPACING.ONE_POINT_FIVE:  # не 1.5 интервал
+                        word.Font.Color = 0x7B3F99
+                    if font_name != "Times New Roman" or int(font_size) != 14: # Не тот шрифт
+                        word.Font.Color = 0x000080
+
+        # --- Вставляем лист с расшифровкой ошибок ---
+        rng_end = doc.Content
+        rng_end.Collapse(0)  # Перемещаемся в самый конец
+        rng_end.InsertBreak(2)  # Новый лист (разрыв страницы)
+
+        # Легенда ошибок
+        legend_items = [
+            ("ошибка шрифта (не Times New Roman, не 14 пт)", 0x000080),
+            ("ошибка выравнивания (не по ширине)", 0x006400),
+            ("ошибка абзацного отступа (не 1.25 см)", 0x654321),
+            ("ошибка межстрочного интервала (не 1.5)", 0x7B3F99),
+        ]
+
+        for text, color in legend_items:
+            p = rng_end.Paragraphs.Add()
+            r = p.Range
+            r.Text = text
+            r.Font.Name = "Times New Roman"
+            r.Font.Size = 14
+            p.Alignment = 0  # По левому краю
+            r.Font.Color = color
+
+            r.InsertParagraphAfter()
+            rng_end.SetRange(r.End + 1, r.End + 1)  # Сдвигаем курсор на новый абзац
+
+        doc.Save()
+        doc.Close()
+        word.Quit()
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('input_path')
     parser.add_argument('output_path')
-    input("1")
     parser.add_argument('--pdf', action='store_true', dest='use_pdf')
-    # Набор полей для титула — ровно 10 строк
-    input("2")
-    parser.add_argument('--title', nargs=10)
-    # С appdata: сначала число, потом повторяемой группы [тип, count, paths...]
-    input("3")
+    parser.add_argument('--check', action='store_true', dest='use_check')
+    parser.add_argument('--title', nargs=14)
     parser.add_argument('--appdata', nargs=argparse.REMAINDER)
-    input("4")
     
     args = parser.parse_args()
-    input("5")
 
-    # Разбираем приложение
+    if args.title:
+        extra_fields = []
+        for field in args.title:
+            extra_fields.append(field.replace('_', ' '))
+    else:
+        extra_fields = None
+
     app_data = []
     if args.appdata:
         it = iter(args.appdata)
@@ -248,12 +373,13 @@ def main():
             img_count = int(next(it))
             paths = [next(it) for _ in range(img_count)]
             app_data.append((typ, paths))
-    input("6")
+
     DocxFormat(
         args.input_path,
         args.output_path,
-        extra_fields=args.title,
+        extra_fields=extra_fields,
         use_pdf=args.use_pdf,
+        use_check=args.use_check,
         app_data=app_data
     )
 

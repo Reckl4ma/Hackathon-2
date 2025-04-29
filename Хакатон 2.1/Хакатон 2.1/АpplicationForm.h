@@ -185,29 +185,31 @@ namespace StarterForm {
 	private: System::Void DeletApl_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (count > 0)
 		{
-			Label^ lastAppLabel = appLabels[appLabels->Count - 1];
-			Label^ lastTypeLabel = typeLabels[typeLabels->Count - 1];
-			TextBox^ lastTextBox = textBoxes[textBoxes->Count - 1];
-			Label^ LabelImage1 = LabelImage[appLabels->Count - 1];
-			Button^ ButtonImage1 = ButtonImage[textBoxes->Count - 1];
-			Label^ LabelInf1 = LabelInf[typeLabels->Count - 1];
+			int idx = count - 1;  // индекс последнего "приложения"
 
-			this->Controls->Remove(lastAppLabel);
-			this->Controls->Remove(lastTypeLabel);
-			this->Controls->Remove(lastTextBox);
-			this->Controls->Remove(LabelImage1);
-			this->Controls->Remove(ButtonImage1);
-			this->Controls->Remove(LabelInf1);
+			// 1. Удаляем контролы из формы
+			this->Controls->Remove(appLabels[idx]);
+			this->Controls->Remove(typeLabels[idx]);
+			this->Controls->Remove(textBoxes[idx]);
+			this->Controls->Remove(LabelImage[idx]);
+			this->Controls->Remove(ButtonImage[idx]);
+			this->Controls->Remove(LabelInf[idx]);
 
-			appLabels->RemoveAt(appLabels->Count - 1);
-			typeLabels->RemoveAt(typeLabels->Count - 1);
-			textBoxes->RemoveAt(textBoxes->Count - 1);
-			LabelImage->RemoveAt(LabelImage->Count - 1);
-			ButtonImage->RemoveAt(ButtonImage->Count - 1);
-			LabelInf->RemoveAt(LabelInf->Count - 1);
+			// 2. Удаляем сами объекты из списков
+			appLabels->RemoveAt(idx);
+			typeLabels->RemoveAt(idx);
+			textBoxes->RemoveAt(idx);
+			LabelImage->RemoveAt(idx);
+			ButtonImage->RemoveAt(idx);
+			LabelInf->RemoveAt(idx);
 
+			// 3. Чистим sharedData
+			sharedData::ListStorage::imagePaths->RemoveAt(idx);
+			sharedData::ListStorage::appTypes->RemoveAt(idx);
+
+			// 4. Декрементим счётчик и "опускаем" считыватель Y
 			count--;
-			currentY -= 160;
+			currentY -= 160; // или на сколько ты у себя поднимаешь при добавлении
 		}
 		else
 		{

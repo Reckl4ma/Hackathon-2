@@ -30,6 +30,9 @@ namespace StarterForm {
 
 
 		   TitlePage^ titlePage;
+	private: System::Windows::Forms::Button^ CheckErrorBut;
+
+
 		   АpplicationForm^ applicationForm;
 
 	public:
@@ -100,6 +103,7 @@ namespace StarterForm {
 			this->SavePdf = (gcnew System::Windows::Forms::Button());
 			this->Switch1 = (gcnew System::Windows::Forms::Button());
 			this->applicationBut = (gcnew System::Windows::Forms::Button());
+			this->CheckErrorBut = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// label1
@@ -131,7 +135,7 @@ namespace StarterForm {
 			// 
 			// ConfirmDocx
 			// 
-			this->ConfirmDocx->Location = System::Drawing::Point(92, 350);
+			this->ConfirmDocx->Location = System::Drawing::Point(92, 404);
 			this->ConfirmDocx->Name = L"ConfirmDocx";
 			this->ConfirmDocx->Size = System::Drawing::Size(124, 49);
 			this->ConfirmDocx->TabIndex = 2;
@@ -166,7 +170,7 @@ namespace StarterForm {
 			this->SelectSame->Name = L"SelectSame";
 			this->SelectSame->Size = System::Drawing::Size(134, 57);
 			this->SelectSame->TabIndex = 5;
-			this->SelectSame->Text = L"Сохранить туда же где и файл";
+			this->SelectSame->Text = L"Сохранить в ту же директорию";
 			this->SelectSame->UseVisualStyleBackColor = true;
 			this->SelectSame->Click += gcnew System::EventHandler(this, &StarterForm::SelectSame_Click);
 			// 
@@ -175,7 +179,7 @@ namespace StarterForm {
 			this->error->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->error->ForeColor = System::Drawing::Color::DarkRed;
-			this->error->Location = System::Drawing::Point(15, 402);
+			this->error->Location = System::Drawing::Point(15, 516);
 			this->error->Name = L"error";
 			this->error->Size = System::Drawing::Size(274, 23);
 			this->error->TabIndex = 6;
@@ -184,7 +188,7 @@ namespace StarterForm {
 			// TitlePageLabel
 			// 
 			this->TitlePageLabel->Enabled = false;
-			this->TitlePageLabel->Location = System::Drawing::Point(155, 216);
+			this->TitlePageLabel->Location = System::Drawing::Point(155, 196);
 			this->TitlePageLabel->Name = L"TitlePageLabel";
 			this->TitlePageLabel->Size = System::Drawing::Size(134, 57);
 			this->TitlePageLabel->TabIndex = 7;
@@ -194,17 +198,17 @@ namespace StarterForm {
 			// 
 			// Switch
 			// 
-			this->Switch->Location = System::Drawing::Point(46, 216);
+			this->Switch->Location = System::Drawing::Point(29, 196);
 			this->Switch->Name = L"Switch";
-			this->Switch->Size = System::Drawing::Size(70, 57);
+			this->Switch->Size = System::Drawing::Size(96, 57);
 			this->Switch->TabIndex = 8;
-			this->Switch->Text = L"Добавить титульный лист";
+			this->Switch->Text = L"Добавить титульный лист и содержание";
 			this->Switch->UseVisualStyleBackColor = true;
 			this->Switch->Click += gcnew System::EventHandler(this, &StarterForm::Switch_Click);
 			// 
 			// SavePdf
 			// 
-			this->SavePdf->Location = System::Drawing::Point(92, 295);
+			this->SavePdf->Location = System::Drawing::Point(92, 349);
 			this->SavePdf->Name = L"SavePdf";
 			this->SavePdf->Size = System::Drawing::Size(124, 49);
 			this->SavePdf->TabIndex = 9;
@@ -214,9 +218,9 @@ namespace StarterForm {
 			// 
 			// Switch1
 			// 
-			this->Switch1->Location = System::Drawing::Point(349, 216);
+			this->Switch1->Location = System::Drawing::Point(29, 266);
 			this->Switch1->Name = L"Switch1";
-			this->Switch1->Size = System::Drawing::Size(81, 57);
+			this->Switch1->Size = System::Drawing::Size(96, 57);
 			this->Switch1->TabIndex = 10;
 			this->Switch1->Text = L"Добавить приложение";
 			this->Switch1->UseVisualStyleBackColor = true;
@@ -225,7 +229,7 @@ namespace StarterForm {
 			// applicationBut
 			// 
 			this->applicationBut->Enabled = false;
-			this->applicationBut->Location = System::Drawing::Point(322, 316);
+			this->applicationBut->Location = System::Drawing::Point(155, 259);
 			this->applicationBut->Name = L"applicationBut";
 			this->applicationBut->Size = System::Drawing::Size(134, 57);
 			this->applicationBut->TabIndex = 11;
@@ -233,11 +237,22 @@ namespace StarterForm {
 			this->applicationBut->UseVisualStyleBackColor = true;
 			this->applicationBut->Click += gcnew System::EventHandler(this, &StarterForm::applicationBut_Click);
 			// 
+			// CheckErrorBut
+			// 
+			this->CheckErrorBut->Location = System::Drawing::Point(92, 459);
+			this->CheckErrorBut->Name = L"CheckErrorBut";
+			this->CheckErrorBut->Size = System::Drawing::Size(124, 49);
+			this->CheckErrorBut->TabIndex = 12;
+			this->CheckErrorBut->Text = L"Проверить docx на ошибки";
+			this->CheckErrorBut->UseVisualStyleBackColor = true;
+			this->CheckErrorBut->Click += gcnew System::EventHandler(this, &StarterForm::CheckErrorBut_Click);
+			// 
 			// StarterForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(486, 432);
+			this->ClientSize = System::Drawing::Size(311, 551);
+			this->Controls->Add(this->CheckErrorBut);
 			this->Controls->Add(this->applicationBut);
 			this->Controls->Add(this->Switch1);
 			this->Controls->Add(this->SavePdf);
@@ -269,6 +284,16 @@ namespace StarterForm {
 		}
 	}
 
+	private:
+		std::string replaceSpaces(std::string str) {
+			for (size_t i = 0; i < str.size(); ++i) {
+				if (str[i] == ' ') {
+					str[i] = '_';
+				}
+			}
+			return str;
+		}
+
 	private: System::Void ConfirmDocx_Click(System::Object^ sender, System::EventArgs^ e) {
 		String^ inputPath = Select->Text;
 		String^ outputPath = SelectSave->Text + ".docx";
@@ -294,16 +319,21 @@ namespace StarterForm {
 
 			if (TitlePageLabel->Enabled) {
 				cmdArgs.push_back("--title");
-				cmdArgs.push_back(data->Inst);
-				cmdArgs.push_back(data->Depart);
-				cmdArgs.push_back(data->Proj);
-				cmdArgs.push_back(data->Doc);
-				cmdArgs.push_back(data->Discip);
-				cmdArgs.push_back("\"" + data->Numb + "\"");
-				cmdArgs.push_back(data->Spec);
-				cmdArgs.push_back(data->FIOStud);
-				cmdArgs.push_back("\"" + data->Group + "\"");
-				cmdArgs.push_back(data->FIOVis);
+				cmdArgs.push_back(replaceSpaces(data->Inst));
+				cmdArgs.push_back(replaceSpaces(data->Depart));
+				cmdArgs.push_back(replaceSpaces(data->Proj));
+				cmdArgs.push_back(replaceSpaces(data->Doc));
+				cmdArgs.push_back(replaceSpaces(data->Discip));
+				cmdArgs.push_back(replaceSpaces(data->Numb));
+				cmdArgs.push_back(replaceSpaces(data->Spec));
+				cmdArgs.push_back(replaceSpaces(data->FIOStud));
+				cmdArgs.push_back(replaceSpaces(data->Group));
+				cmdArgs.push_back(replaceSpaces(data->FIOVis));
+
+				cmdArgs.push_back(replaceSpaces(data->InstRed));
+				cmdArgs.push_back(replaceSpaces(data->DocType));
+				cmdArgs.push_back(replaceSpaces(data->UDC));
+				cmdArgs.push_back(replaceSpaces(data->SubDoc));
 			}
 
 			if (applicationBut->Enabled) {
@@ -327,16 +357,10 @@ namespace StarterForm {
 
 			std::ostringstream oss;
 			for (auto& a : cmdArgs) {
-				if (a.find(' ') != std::string::npos) {
-					oss << '"' << a << "\" ";
-				}
-				else {
-					oss << a << " ";
-				}
+				oss << a << " ";
 			}
 
 			auto cmdLine = oss.str();
-			MessageBox::Show(gcnew String(cmdLine.c_str()), "Команда для Python");
 
 			system(cmdLine.c_str());
 		}
@@ -370,12 +394,12 @@ namespace StarterForm {
 	private: System::Void Switch_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (TitlePageLabel->Enabled == false)
 		{
-			Switch->Text = "Убрать титульный лист";
+			Switch->Text = "Убрать титульный лист и содержание";
 			TitlePageLabel->Enabled = true;
 		}
 		else 
 		{
-			Switch->Text = "Добавить титульный лист";
+			Switch->Text = "Добавить титульный лист и содержание";
 			TitlePageLabel->Enabled = false;
 		}
 	}
@@ -396,9 +420,20 @@ namespace StarterForm {
 		if (inputPath != "Указать путь" && outputPath != "Указать путь")
 		{
 			bool usePdf = true;
-			String^ command = "python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" \"" + inputPath + "\" \"" + outputPath + "\" \"" + usePdf + "\"";
-			std::string arguments = msclr::interop::marshal_as<std::string>(command);
-			system(arguments.c_str());
+			std::vector<std::string> cmdArgs;
+			cmdArgs.push_back("python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" ");
+			cmdArgs.push_back(msclr::interop::marshal_as<std::string>(inputPath));
+			cmdArgs.push_back(msclr::interop::marshal_as<std::string>(outputPath));
+			if (usePdf) cmdArgs.push_back("--pdf");
+
+			std::ostringstream oss;
+			for (auto& a : cmdArgs) {
+				oss << a << " ";
+			}
+
+			auto cmdLine = oss.str();
+
+			system(cmdLine.c_str());
 		}
 	}
 	private: System::Void Switch1_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -415,6 +450,38 @@ namespace StarterForm {
 	}
 	private: System::Void applicationBut_Click(System::Object^ sender, System::EventArgs^ e) {
 		applicationForm->ShowDialog();
+	}
+	private: System::Void CheckErrorBut_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ inputPath = Select->Text;
+		String^ outputPath = SelectSave->Text + "_Ошибки.docx";
+
+		if (outputPath == "Указать путь")
+		{
+			error->Text = "Выберите путь для сохранения";
+		}
+
+		if (inputPath == "Указать путь")
+		{
+			error->Text = "Выберите путь до файла";
+		}
+
+		if (inputPath != "Указать путь" && outputPath != "Указать путь")
+		{
+			std::vector<std::string> cmdArgs;
+			cmdArgs.push_back("python \"..\\..\\DocxFormat\\DocxFormat\\DocxFormat.py\" ");
+			cmdArgs.push_back(msclr::interop::marshal_as<std::string>(inputPath));
+			cmdArgs.push_back(msclr::interop::marshal_as<std::string>(outputPath));
+			cmdArgs.push_back("--check");
+
+			std::ostringstream oss;
+			for (auto& a : cmdArgs) {
+				oss << a << " ";
+			}
+
+			auto cmdLine = oss.str();
+
+			system(cmdLine.c_str());
+		}
 	}
 };
 }

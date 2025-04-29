@@ -13,4 +13,9 @@ struct TitlePageData {
     string FIOStud;
     string Group;
     string FIOVis;
+    string InstRed;
+    string DocType;
+    string UDC;
+    string SubDoc;
 };
+
